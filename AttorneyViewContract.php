@@ -358,6 +358,7 @@
 						<a class="btn btn-primary pull-right" style="margin-right: 4px" href="javascript:window.print()"> <?php echo $lang['doc_print']; ?> </a>
 					</div>
 				</div>
+				<br></br>
 			</form>
 		</div>
 
