@@ -61,71 +61,11 @@
   $quantity = mysql_real_escape_string($quantity);
   $causales = explode(", ", $documentSubcategory);
 
-  if(isset($_FILES['file'])) {
-    $file = $_FILES['file'];
 
-    // File properties
-    $file_name = $file['name'];
-    $file_tmp = $file['tmp_name'];
-    $file_size = $file['size'];
-    $file_error = $file['error'];
+  if($documentType == 'Demanda' && $documentSubcategory == ''){
+    header("Location:anadirCasohtml.php?n=error");
+    die("Falto un causal.");
 
-    // Work out the file extension
-    $file_ext = explode('.', $file_name);
-    $file_ext = strtolower(end($file_ext));
-
-    $allowed = array('txt', 'pdf');
-
-    if(in_array($file_ext, $allowed)) {
-      if($file_error === 0) {
-        if($file_size <= 5000000) {
-          $file_name_new = uniqid('', true) . '.' . $file_ext;
-          $file_destination = 'copies\\' . $file_name_new;
-
-          if(move_uploaded_file($file_tmp, $file_destination)) {
-            $Copy = $file_destination.'-';
-
-            $key = 'diego';
-            //$plain_text = 'very important data';
-
-            /* Open module, and create IV */
-            $td = mcrypt_module_open('rijndael-256', '', 'ecb', '');
-            $key = substr($key, 0, mcrypt_enc_get_key_size($td));
-            $iv_size = mcrypt_enc_get_iv_size($td);
-            $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
-
-            /* Initialize encryption handle */
-            if (mcrypt_generic_init($td, $key, $iv) != -1) {
-              /* Encrypt data */
-              $caseCopy = mcrypt_generic($td, $Copy);
-              mcrypt_generic_deinit($td);
-
-              /* Clean up */
-              mcrypt_generic_deinit($td);
-              mcrypt_module_close($td);
-            }
-            /* SQL
-                $sql = query to update the information of the case in the database with the variables above
-                $stmt = sqlsrv_query() = prepares and executes the query
-                $row = sqlsrv_fetch_array() = returns the row as an array
-              */
-              $sql3 = "INSERT INTO Copy VALUES( '$_SESSION[docID]', GETDATE(), '$caseCopy')";
-              $stmt3 = sqlsrv_query($conn, $sql3);
-              $row3 = sqlsrv_fetch_array($stmt3, SQLSRV_FETCH_ASSOC);
-
-              if ($stmt3 === false) {
-                echo "tercer if";
-                echo $sql3;
-                die(print_r( sqlsrv_errors(), true));
-              }
-          }
-          else {
-                $caseCopy = "copies\\";
-              }
-          }
-      }
-    }
-    
   }
   
 
@@ -146,8 +86,8 @@
     echo "primer if";
    
     echo $sql;
-   die(print_r( sqlsrv_errors(), true));
     header("Location:anadirCasohtml.php?e=error");
+    die(print_r( sqlsrv_errors(), true));
   }
 
   /* SQL
@@ -246,6 +186,73 @@
       die(print_r( sqlsrv_errors(), true));
     }
   }
+
+  if(isset($_FILES['file'])) {
+      $file = $_FILES['file'];
+
+      // File properties
+      $file_name = $file['name'];
+      $file_tmp = $file['tmp_name'];
+      $file_size = $file['size'];
+      $file_error = $file['error'];
+
+      // Work out the file extension
+      $file_ext = explode('.', $file_name);
+      $file_ext = strtolower(end($file_ext));
+
+      $allowed = array('txt', 'pdf');
+
+      if(in_array($file_ext, $allowed)) {
+        if($file_error === 0) {
+          if($file_size <= 5000000) {
+            $file_name_new = uniqid('', true) . '.' . $file_ext;
+            $file_destination = 'copies\\' . $file_name_new;
+
+            if(move_uploaded_file($file_tmp, $file_destination)) {
+
+              $CopiaDe = $file_destination.'-';
+
+              $key = 'diego';
+              //$plain_text = 'very important data';
+
+              /* Open module, and create IV */
+              $td = mcrypt_module_open('rijndael-256', '', 'ecb', '');
+              $key = substr($key, 0, mcrypt_enc_get_key_size($td));
+              $iv_size = mcrypt_enc_get_iv_size($td);
+              $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
+              /* Initialize encryption handle */
+              if (mcrypt_generic_init($td, $key, $iv) != -1) {
+                /* Encrypt data */
+                $caseCopy = mcrypt_generic($td, $CopiaDe);
+                mcrypt_generic_deinit($td);
+
+                /* Clean up */
+                mcrypt_generic_deinit($td);
+                mcrypt_module_close($td);
+              }
+              /* SQL
+                $sql = query to update the information of the case in the database with the variables above
+                $stmt = sqlsrv_query() = prepares and executes the query
+                $row = sqlsrv_fetch_array() = returns the row as an array
+              */
+              $sql3 = "INSERT INTO Copy VALUES('$caseNumber', GETDATE(), '$caseCopy')";
+              $stmt3 = sqlsrv_query($conn, $sql3);
+              $row3 = sqlsrv_fetch_array($stmt3, SQLSRV_FETCH_ASSOC);
+
+              if ($stmt3 === false) {
+                echo "tercer if";
+                echo $sql3;
+                die(print_r( sqlsrv_errors(), true));
+              }
+            }
+            else {
+              echo "Error uploading";
+            }
+          }
+        }
+      }
+    }
 
   //redirect to the page secretaryPagehtml.php
   header("Location:secretaryPagehtml.php");
