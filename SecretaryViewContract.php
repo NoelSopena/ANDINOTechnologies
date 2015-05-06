@@ -161,7 +161,7 @@
 			<form id="anadirContrato" action="ViewContractUpdate.php" method="post" enctype="multipart/form-data">
 				<div class="row">
 					<!-- This input is to select the document date -->
-					<label class="col-md-2"> <?php echo $lang['dateGrantd']; ?>: <input type="date" class="form-control" value=<?php echo $eDate ?>></label>
+					<label class="col-md-2"> <?php echo $lang['dateGrantd']; ?>: <input type="date" class="form-control" id="dateGrantd" name="dateGrantd" value=<?php echo $eDate ?>></label>
 					<!-- This input is to select the date that the document was received -->
 					<label class="col-md-2 col-md-offset-1"><?php echo $lang['effectiveDateFrom']; ?>:<input type="date" class="form-control" id="dateFrom" name="dateFrom" value=<?php echo $cDate ?>></label>
 					<!-- This input is to select the document deadline date -->
@@ -173,7 +173,7 @@
 									<!-- This input box is to insert the contract number -->
 					<div class="col-md-2">
 						<label "control-label"><?php echo $lang['contract_num']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['contract_num']; ?> " onkeyup="valid(this)" onblur="valid(this)" id="contractNum" name="contractNum" value='<?php echo $id ?>'>
+						<input type="text" class="form-control" placeholder="<?php echo $lang['contract_num']; ?> " onkeyup="valid(this)" onblur="valid(this)" id="contractNum" name="contractNum" value='<?php echo $id ?>' disabled>
 					</div>
 					
 					<!-- This input box is to insert the name of contractor the  -->
@@ -204,7 +204,7 @@
 								echo $sql2;
 								die(print_r( sqlsrv_errors(), true));
 							}
-							echo "<select class='form-control' name='category' onchange='showType(this.value)' value='<?php echo $serviceCategory ?>'>";
+							echo "<select class='form-control' name='category' id='category' onchange='showType(this.value)' value='<?php echo $serviceCategory ?>'>";
 							echo "<option> $row1[Categoria] </option>";
 							while ($row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC)) {
 								echo "<option value='" . $row2['Codigo'] . "'>" . $row2['Categoria'] . "</option>";
@@ -283,7 +283,7 @@
 				<p></p>
 				<label "control-label"><?php echo $lang['case_subject']; ?>:</label>
 				<!-- This input box is to write some issue of the contract -->
-				<textarea class="form-control .input-lg" rows="5" placeholder="<?php echo $lang['case_subject']; ?>"><?php echo $description ?></textarea>
+				<textarea class="form-control .input-lg" rows="5" id="subjet" name="subject" placeholder="<?php echo $lang['case_subject']; ?>"><?php echo $description ?></textarea>
 
 				<div class='row col-md-3'>
 					<label "control-label"><?php echo $lang['case_comment']; ?>:</label>
@@ -356,6 +356,7 @@
 				<br></br>
 			</form>
 		</div>
+		<br></br>
 
 		<script src="js/jquery-1.11.2.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
