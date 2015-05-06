@@ -20,18 +20,18 @@
   }
 
   //if the employee is a secretary go to the secretaryPagehtml.php
-	if ($job == "secretary") {
-		header("Location:secretaryPagehtml.php");
+  if ($job == "secretary") {
+    header("Location:secretaryPagehtml.php");
   }
   //if the employee is a attorney go to the attorneyPagehtml.php
   elseif ($job == "attorney") {
-  	header("Location:attorneyPagehtml.php");
-	}
-  //if the employee is the administrator go to the adminPagehtml.php
-	elseif ($job == "admin") {
-		header("Location:adminPagehtml.php");
+    header("Location:attorneyPagehtml.php");
   }
-  
+  //if the employee is the administrator go to the adminPagehtml.php
+  elseif ($job == "admin") {
+    header("Location:adminPagehtml.php");
+  }
+
   //close the server connection
   sqlsrv_close($conn);
 ?>
