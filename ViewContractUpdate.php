@@ -40,6 +40,8 @@
   $description = $_POST['description'];
   $Receiver = $_POST['caseReceiver'];
   $comentario = $_POST['comentario'];
+  $fondo = $_POST['fondo'];
+  $subject = $_POST['subject'];
 
 
   // The function mysql_real_escape_string will clear the special characters from the variable.
@@ -55,11 +57,28 @@
   $description = mysql_real_escape_string($description);
   $Receiver = mysql_real_escape_string($Receiver);
   $comentario = mysql_real_escape_string($comentario);
+  $fondo = mysql_real_escape_string($fondo);
+  $subject = mysql_real_escape_string($subject);
 
-  $sql2 = "SELECT Categoria FROM Categoria WHERE Codigo = '$category'";
+
+  $sql2 = "SELECT Codigo FROM Categoria WHERE Categoria = '$category'";
   $stmt2 = sqlsrv_query($conn, $sql2);
   $row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC);
 
+  /* SQL
+    $sql = query to insert the information of the document in the database with the variable above
+    $stmt = sqlsrv_query() = prepares and executes the query
+    $row = sqlsrv_fetch_array() = returns the row as an array
+  */
+  $sql = "UPDATE Contracts SET DateGranted = CASE WHEN '$dateGrantd' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateGrantd' END, EffectiveFrom =  CASE WHEN '$dateFrom' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateFrom' END,
+          EffectiveUntil = CASE WHEN '$dateTo' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateTo' END, ContractorName =  '$contractorName', ServiceCategory =  '$row2[Codigo]', 
+          ServiceType ='$type', Quantity =  '$quantity', Fund =  '$fondo', ContractSubject =  '$subject', Estado =  '$status' WHERE ContractNumber =  '$_SESSION[docID]'";
+  $stmt = sqlsrv_query($conn, $sql);
+  $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+
+ if ($stmt === false) {
+    die($sql);
+  }
 
   if(isset($_FILES['file'])) {
       $file = $_FILES['file'];
