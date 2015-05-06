@@ -19,6 +19,7 @@
 	*/
 	$Job = $_POST['jobTitle'];
 	$Role = $_POST['role'];
+	$Type = $_POST['docType'];
 	$Forum = $_POST['forumName'];
 	$Subcategory = $_POST['Subcategory'];
 
@@ -39,6 +40,7 @@
 	//The function mysql_real_escape_string will clear the special characters from the variable.
 	$Job = mysql_real_escape_string($Job);
 	$Role = mysql_real_escape_string($Role);
+	$Type = mysql_real_escape_string($Type);
 	$Forum = mysql_real_escape_string($Forum);
 	$Subcategory = mysql_real_escape_string($Subcategory);
 
@@ -49,6 +51,22 @@
 			$row = sqlsrv_fetch_array() = returns the row as an array
 		*/
 		$sql = "INSERT INTO JobTitle VALUES('$Job', '$Role')";
+		$stmt = sqlsrv_query($conn, $sql);
+		$row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+
+		//Verifies if the query is executed successfully
+		if ($stmt === false) {
+			die($sql);
+		}
+	}
+
+	if ($Type <> '') {
+		/* SQL
+			$sql = query to insert the information of the employee in the database with the variable above
+			$stmt = sqlsrv_query() = prepares and executes the query
+			$row = sqlsrv_fetch_array() = returns the row as an array
+		*/
+		$sql = "INSERT INTO Doctype VALUES('$Type')";
 		$stmt = sqlsrv_query($conn, $sql);
 		$row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
