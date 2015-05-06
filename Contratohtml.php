@@ -107,14 +107,14 @@
 					<!-- This input box is to insert the contract number -->
 					<div class="col-md-2">
 						<label "control-label"><?php echo $lang['contract_num']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['contract_num']; ?> " onkeyup="valid(this)" onblur="valid(this)" id="contractNum" name="contractNum" required oninput="validateContractNumber(this);">
+						<input type="text" class="form-control" placeholder="<?php echo $lang['contract_num']; ?> " maxlength="15" onkeyup="valid(this)" onblur="valid(this)" id="contractNum" name="contractNum" required oninput="validateContractNumber(this);">
 							<span  id ='contractNumber_help' class=''></span>
 						</div>
 					
 					<!-- This input box is to insert the name of contractor the  -->
 					<div class="col-md-5 col-md-offset-1">
 						<label "control-label"><?php echo $lang['contName']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['contName']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="contractorName" name="contractorName"></div>
+						<input type="text" class="form-control" placeholder="<?php echo $lang['contName']; ?>" maxlength="30"  onkeyup="valid(this)" onblur="valid(this)" id="contractorName" name="contractorName"></div>
 				</div>
 
 				<p></p>
@@ -191,30 +191,30 @@
 					
 					<div class="col-md-3 ">
 						<label "control-label"><?php echo $lang['contAmount']; ?>:</label>
-						<input type="number" step='0.01' class="form-control" placeholder="<?php echo $lang['contAmount']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="quantity" name="quantity">
+						<input type="number" step='0.01' class="form-control" max="9999999999.99" placeholder="<?php echo $lang['contAmount']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="quantity" name="quantity">
 					</div>
 
 					<div class="col-md-3">
 						<label "control-label"><?php echo $lang['fondo']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['fondo']; ?> " onkeyup="valid(this)" onblur="valid(this)" id="fondo" name="fondo" required>
+						<input type="text" class="form-control" placeholder="<?php echo $lang['fondo']; ?> " maxlength="50"  onkeyup="valid(this)" onblur="valid(this)" id="fondo" name="fondo" required>
 						</div>
 					
 					
 					<div class="col-md-3 ">
 						<label "control-label"><?php echo $lang['status']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['status']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="status" name="status">
+						<input type="text" class="form-control" placeholder="<?php echo $lang['status']; ?>" maxlength="100"  onkeyup="valid(this)" onblur="valid(this)" id="status" name="status">
 					</div>
 				</div>
 
 				<p></p>
 				<label "control-label"><?php echo $lang['case_subject']; ?>:</label>
 				<!-- This input box is to write some issue of the contract -->
-				<textarea class="form-control .input-lg" rows="5" placeholder="<?php echo $lang['case_subject']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="description" name="description"></textarea>
+				<textarea class="form-control .input-lg" rows="5" placeholder="<?php echo $lang['case_subject']; ?>" maxlength="300"  onkeyup="valid(this)" onblur="valid(this)" id="description" name="description"></textarea>
 
 				<p></p>
 				<label "control-label"><?php echo $lang['case_comment']; ?>:</label>
 				<!-- This input box is to write some comments of the contract -->
-				<textarea class="form-control .input-lg" rows="5" placeholder="<?php echo $lang['case_comment']; ?>" onkeyup="valid(this)" id="contractComment" name="contractName" onblur="valid(this)"></textarea>
+				<textarea class="form-control .input-lg" rows="5" placeholder="<?php echo $lang['case_comment']; ?>" maxlength="300"  onkeyup="valid(this)" id="contractComment" name="contractComment" onblur="valid(this)"></textarea>
 
 				<br></br>
 				<div class="footer">
