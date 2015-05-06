@@ -47,11 +47,14 @@
 
   if ($newUsername == '' && $newPassword != '') {
     $sql = "UPDATE Employee SET UserPassword = '$newCrypt' WHERE Username = '$oldUsername' AND UserPassword = '$oldCrypt'";
-  } else if ($newUsername != '' && $newPassword == '') {
-    $sql = "UPDATE Employee SET Username = '$newUsername' WHERE Username = '$oldUsername'";
-  } else if ($newUsername != '' && $newPassword != '') {
+  }
+  else if ($newUsername != '' && $newPassword == '') {
+    $sql = "UPDATE Employee SET Username = '$newUsername' WHERE Username = '$oldUsername' AND UserPassword = '$oldCrypt'";
+  }
+  else if ($newUsername != '' && $newPassword != '') {
     $sql = "UPDATE Employee SET Username = '$newUsername', UserPassword = '$newCrypt' WHERE Username = '$oldUsername' AND UserPassword = '$oldCrypt'";
-  } else {
+  }
+  else {
     header("Location:changehtml.php?e=error");
     die(print_r( sqlsrv_errors(), true));
   }
@@ -59,9 +62,7 @@
   $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
   //Verify if the query executed successfully
   
-  if ($stmt === false) {
-    echo $sql;
-    
+  if ($stmt === false) {    
     header("Location:changehtml.php?i=error");
     die('Username already exists.');
   }
@@ -77,7 +78,7 @@
     $sql2 = "SELECT Username, Name, MiddleName, LastName, MaidenName, Job FROM Employee WHERE Username = '$newUsername' and UserPassword = '$newCrypt'";
     $stmt2 = sqlsrv_query($conn, $sql2);
     $row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC);
-    if ($stmt === false) {
+    if ($stmt2 === false) {
       echo $sql2;
       die(print_r( sqlsrv_errors(), true));
     }
