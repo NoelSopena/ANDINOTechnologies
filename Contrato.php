@@ -62,45 +62,13 @@
   $stmt2 = sqlsrv_query($conn, $sql2);
   $row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC);
 
-  if(isset($_FILES['file'])) {
-    $file = $_FILES['file'];
-
-    // File properties
-    $file_name = $file['name'];
-    $file_tmp = $file['tmp_name'];
-    $file_size = $file['size'];
-    $file_error = $file['error'];
-
-    // Work out the file extension
-    $file_ext = explode('.', $file_name);
-    $file_ext = strtolower(end($file_ext));
-
-    $allowed = array('txt', 'pdf');
-
-    if(in_array($file_ext, $allowed)) {
-      if($file_error === 0) {
-        if($file_size <= 5000000) {
-          $file_name_new = uniqid('', true) . '.' . $file_ext;
-          $file_destination = 'copies\\' . $file_name_new;
-
-          if(move_uploaded_file($file_tmp, $file_destination)) {
-            $caseCopy = $file_destination;
-          }
-        }
-      }
-     }
-    else {
-      $caseCopy = "copies\\";
-    }
-  }
-
   /* SQL
     $sql = query to insert the information of the document in the database with the variable above
     $stmt = sqlsrv_query() = prepares and executes the query
     $row = sqlsrv_fetch_array() = returns the row as an array
   */
-  $sql = "INSERT INTO Contracts VALUES('$contractNum', '$dateGrantd', CASE WHEN '$dateFrom' = '' THEN NULL ELSE '$dateFrom' END,
-          CASE WHEN '$dateTo' = '' THEN NULL ELSE '$dateTo' END, '$contractorName', '$category', '$type', '$quantity', '$fondo', '$description', '$status')";
+  $sql = "INSERT INTO Contracts VALUES('$contractNum', CASE WHEN '$dateGrantd' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateGrantd' END, CASE WHEN '$dateFrom' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateFrom' END,
+          CASE WHEN '$dateTo' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateTo' END, '$contractorName', '$category', '$type', '$quantity', '$fondo', '$description', '$status')";
   $stmt = sqlsrv_query($conn, $sql);
   $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
@@ -127,25 +95,92 @@
   }
 
   //if there are some comment of the document execute the query inside the if
-  if ($caseComment <> "") {
+  if ($contractComment <> "") {
     /* SQL
       $sql4 = query to insert the comments to the document from the employee who add the comment and the date when is added
       $stmt4 = sqlsrv_query() = prepares and executes the query
       $row4 = sqlsrv_fetch_array() = returns the row as an array
       The function mysql_real_escape_string will clear the special characters from the variable.
     */
-    $caseNumber = mysql_real_escape_string($caseNumber);
-    $caseComment = mysql_real_escape_string($caseComment);
-    $sql4 = "INSERT INTO ContractComments VALUES('$_SESSION[username]', '$contractNumber', GETDATE(), '$contractComment')";
+    
+    $sql4 = "INSERT INTO ContractComments VALUES('$_SESSION[username]', '$contractNum', GETDATE(), '$contractComment')";
     $stmt4 = sqlsrv_query($conn, $sql4);
     $row4 = sqlsrv_fetch_array($stmt4, SQLSRV_FETCH_ASSOC);
 
     //to verify if the query executed successful
     if ($stmt4 === false) {
+      
       echo "cuarto if";
       die(print_r( sqlsrv_errors(), true));
     }
   }
+
+  if(isset($_FILES['file'])) {
+      $file = $_FILES['file'];
+
+      // File properties
+      $file_name = $file['name'];
+      $file_tmp = $file['tmp_name'];
+      $file_size = $file['size'];
+      $file_error = $file['error'];
+
+      // Work out the file extension
+      $file_ext = explode('.', $file_name);
+      $file_ext = strtolower(end($file_ext));
+
+      $allowed = array('txt', 'pdf');
+
+      if(in_array($file_ext, $allowed)) {
+        if($file_error === 0) {
+          if($file_size <= 5000000) {
+            $file_name_new = uniqid('', true) . '.' . $file_ext;
+            $file_destination = 'copies\\' . $file_name_new;
+
+            if(move_uploaded_file($file_tmp, $file_destination)) {
+
+              $CopiaDe = $file_destination.'-';
+
+              $key = 'diego';
+              //$plain_text = 'very important data';
+
+              /* Open module, and create IV */
+              $td = mcrypt_module_open('rijndael-256', '', 'ecb', '');
+              $key = substr($key, 0, mcrypt_enc_get_key_size($td));
+              $iv_size = mcrypt_enc_get_iv_size($td);
+              $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
+              /* Initialize encryption handle */
+              if (mcrypt_generic_init($td, $key, $iv) != -1) {
+                /* Encrypt data */
+                $caseCopy = mcrypt_generic($td, $CopiaDe);
+                mcrypt_generic_deinit($td);
+
+                /* Clean up */
+                mcrypt_generic_deinit($td);
+                mcrypt_module_close($td);
+              }
+              /* SQL
+                $sql = query to update the information of the case in the database with the variables above
+                $stmt = sqlsrv_query() = prepares and executes the query
+                $row = sqlsrv_fetch_array() = returns the row as an array
+              */
+              $sql3 = "INSERT INTO CopyContract VALUES('$contractNum', GETDATE(), '$caseCopy')";
+              $stmt3 = sqlsrv_query($conn, $sql3);
+              $row3 = sqlsrv_fetch_array($stmt3, SQLSRV_FETCH_ASSOC);
+
+              if ($stmt3 === false) {
+                echo "tercer if";
+                echo $sql3;
+                die(print_r( sqlsrv_errors(), true));
+              }
+            }
+            else {
+              echo "Error uploading";
+            }
+          }
+        }
+      }
+    }
 
   //redirect to the page secretaryPagehtml.php
   header("Location:secretaryPagehtml.php");
