@@ -21,15 +21,15 @@
 
     //CHANGE USER - INICIAR_SESION
   $lang['changeUser']   = 'Cambiar Usuario';
-  $lang['oldUserName']  = 'Nombre de Usuario Anterior';
+  $lang['oldUserName']  = 'Nombre de Usuario';
   $lang['newUserName']  = 'Nombre de Usuario Nuevo';
-  $lang['oldPassword']  = 'Contraseña Anterior';
+  $lang['oldPassword']  = 'Contraseña';
   $lang['newPassword']  = 'Contraseña Nueva';
   $lang['confirmPassword']  = 'Confirmar Contraseña';
   $lang['change']       = 'Cambiar';
 
   //ADMIN PAGE
-  $lang['adminPage'] = 'Página del Administrador'; 
+  $lang['adminPage'] = 'Página del Inicial'; 
   $lang['searchButton'] = 'Buscar';
   $lang['eList'] = 'Mostrar Lista de Empleados';
   $lang['genStats'] = 'Generar Estadísticas';
@@ -38,7 +38,10 @@
   $lang['docType'] = 'Tipo de Documento';
   $lang['dDate'] = 'Fecha de Vencimiento'; 
   $lang['status'] = 'Estado'; 
-  $lang['viewCase'] = 'Mostrar'; 
+  $lang['viewCase'] = 'Mostrar';
+  $lang['showDocuments']      = 'Mostrar Documentos'; //Show Document Button
+  $lang['allDocuments']       = 'Todos los Documentos'; //All Documents
+  $lang['nearDocuments']        = 'Cerca del Termino'; //My Documents 
   
   //EMPLOYEE LIST VIEW
   $lang['eListHeader'] = 'Lista de Empleados'; 
@@ -86,7 +89,7 @@
   //GENERATE STATS PAGE
   $lang['genBy'] = 'Por';
   $lang['genSubcategory'] = 'Subcategoría'; 
-  $lang['genQuantity'] = 'Cuantía'; 
+  $lang['genQuantity'] = '&#36 Cuantía'; 
   $lang['genAmount'] = 'Cantidad'; 
   $lang['sDate'] = 'Fecha de Inicio'; 
   $lang['eDate'] = 'Fecha de Vencimiento'; 
@@ -98,8 +101,8 @@
   $lang['doc_others'] = 'Otros'; 
 
   //SECRETARY PROFILE
-  $lang['s_profile'] = 'Perfil de la Secretaria';
-    $lang['addContract'] = 'Añadir Contrato';
+  $lang['s_profile'] = 'Perfil';
+  $lang['addContract'] = 'Añadir Contrato';
 
   //ADD_CASE 
   $lang['add_case'] = 'Añadir Caso'; 
@@ -112,31 +115,38 @@
   $lang['case_region'] = 'Región'; 
   $lang['case_sender'] = 'Remitente'; 
   $lang['department'] = 'Departmento'; 
-  $lang['case_comment'] = 'Comentario'; 
+  $lang['case_comment'] = 'Comentario';
+  $lang['case_amount'] = '&#36 Cantidad'; 
   $lang['case_subject'] = 'Asunto'; 
   $lang['case_referred'] = 'Referido a'; 
   $lang['doc_print']     = 'Imprimir'; 
   $lang['doc_view']      = 'Documento';
 
   //ADD_CONTRACT 
+  $lang['dateGrantd']     = 'Fecha Otorgado';
+  $lang['effectiveDateFrom']     = 'Vigencia Desde';
+  $lang['effectiveDateTo']     = 'Vigencia Hasta';
   $lang['contractHeader'] = 'Contrato'; 
   $lang['contract_num'] = '# Contract'; 
   $lang['contType'] = 'Tipo de Contrato'; 
   $lang['serviceType'] = 'Tipo de Servicio';
+  $lang['contName']   = 'Nombre del Contratista';
+  $lang['contAmount'] = '&#36 Cantidad'; 
   $lang['print'] = 'Imprimir';
+  $lang['fondo'] = 'Fondo';
 
   //CASE
   $lang['case'] = 'Caso'; 
   $lang['case_modify'] = 'Editar'; 
   $lang['status'] = 'Estado'; 
-  $lang['status_processed'] = 'Procesado'; 
-  $lang['status_not_processed'] = 'No Procesado'; 
+  $lang['status_processed'] = 'Concluido'; 
+  $lang['status_not_processed'] = 'Activo'; 
 
   //CASES PAGE
   $lang['case_page'] = 'Página de Casos'; 
 
   //LAWYER PROFILE
-  $lang['l_profile']    = 'Perfil del Abogado'; 
+  $lang['l_profile']    = 'Perfil'; 
   $lang['l_name']       = 'Lic. Nombre'; 
   $lang['l_docs']       = 'Mis Documentos'; 
   $lang['allDocs']      = 'Todos los Documentos'; 
@@ -148,7 +158,13 @@
 
   //STATISTICS
   $lang['documentAmount']   = 'La Cantidad de Documentos es';
+
+  //RESET PASSWORD
+  $lang['email']        = 'Correo Electrónico';
+  $lang['reset']        = 'Resetear Contraseña';
+  $lang['getPassword']  = 'Recuperar Contraseña';
+  $lang['firstmsm']     = 'Por favor introduzca su correo electrónico. Se le enviará a su correo electrónico.';
+  $lang['secondmsm']    = 'Disculpe, no podemos encontrar los detalles de su cuenta. Trate otro correo electrónico.';  
+  $lang['thirdmsm']     = 'Se le ha enviado un correo electrónico con los detalles de su a ';   
  
-
-
 ?>
