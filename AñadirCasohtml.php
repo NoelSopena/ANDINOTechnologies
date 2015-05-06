@@ -32,7 +32,7 @@
 		<!-- This is to only permit the characters that we allow to input to the system -->
 		<script type="text/JavaScript">
 			function valid(f) {
-				!(/^[A-z;0-9; ;.;,;#;&;-;ñ]*$/i).test(f.value)?f.value = f.value.replace(/[^A-z;0-9; ;.;,;#;&;-;ñ]/ig,''):null;
+				!(/^[A-z;0-9; ;.;,;#;&;-]*$/i).test(f.value)?f.value = f.value.replace(/[^A-z;0-9; ;.;,;#;&;-]/ig,''):null;
 			} 
 		</script>
 		<link rel="stylesheet" href="css/jquery-ui.css">
@@ -143,17 +143,20 @@
 				<div class="row">
 					<!-- This input is to select the document date -->
 					<label class="col-md-2"> <?php echo $lang['date_issued']; ?>: <input type="date" class="form-control" id="dateDocument" name="dateDocument"></label>
+					
 					<!-- This input is to select the date that the document was received -->
 					<label class="col-md-2 col-md-offset-1"><?php echo $lang['date_received']; ?>: <input type="date" class="form-control" id="dateReceived" name="dateReceived" required></label>
+					
 					<!-- This input is to select the document deadline date -->
 					<label class="col-md-2 col-md-offset-1"><?php echo $lang['date_due']; ?>: <input type="date" class="form-control" id="dateDue" name="dateDue"></label>
+
 				</div>
 
 				<p></p>
 				<div class="row">
 					<div class="col-md-2">
 						<label "control-label"><?php echo $lang['case_num']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['case_num']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="caseNumber" name="caseNumber" required oninput="validateCaseNumber(this);">
+						<input type="text" class="form-control" placeholder="<?php echo $lang['case_num']; ?>" maxlength="15" onkeyup="valid(this)" onblur="valid(this)" id="caseNumber" name="caseNumber" required oninput="validateCaseNumber(this);">
 						<span  id ='caseNumber_help' class=''></span>
 					</div>
 
@@ -161,7 +164,7 @@
 					<!-- This input box is to insert the name of the appellant -->
 					<div class="col-md-5 col-md-offset-1">
 						<label "control-label"><?php echo $lang['case_apellant']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['case_apellant']; ?>" onkeyup="valid(this)" onblur="valid(this)" id="caseAppellant" name="caseAppellant" required>
+						<input type="text" class="form-control" placeholder="<?php echo $lang['case_apellant']; ?>" maxlength="30" onkeyup="valid(this)" onblur="valid(this)" id="caseAppellant" name="caseAppellant" required>
 					</div>
 				</div>
 
@@ -194,13 +197,14 @@
 					<!-- This input box is for inserting the subcategory of the document -->
 					<div class="col-md-5">
 						<label "control-label"><?php echo $lang['genSubcategory']; ?>:</label>
-						<input class="form-control" placeholder="<?php echo $lang['genSubcategory']; ?>" onkeyup="valid(this)" onblur="valid(this)" name="documentSubcategory" id="tags">
+						<input class="form-control" placeholder="<?php echo $lang['genSubcategory']; ?>" onkeyup="valid(this)" onblur="valid(this)" name="documentSubcategory" id="tags" oninput="validateCausal(this);">
+						<span  id ='causal_help' class=''></span>
 					</div>
 
 					<!-- Amount in lawsuit -->
 					<div class="col-md-2">
 						<label "control-label"><?php echo $lang['case_amount']; ?>:</label>
-						<input type="number" step='0.01' class="form-control" placeholder="<?php echo $lang['case_amount']; ?>" name="quantity" id="quantity">
+						<input type="number" max="9999999999.99" step='0.01' class="form-control" placeholder="<?php echo $lang['case_amount']; ?>" name="quantity" id="quantity">
 					</div>
 				</div>
 
@@ -240,7 +244,7 @@
 					<!-- This input box is to insert name of the lawyer that sends the document -->
 					<div class="col-md-3">
 						<label "control-label"><?php echo $lang['case_sender']; ?>:</label>
-						<input type="text" class="form-control" placeholder="<?php echo $lang['case_sender']; ?>" onkeyup="valid(this)" onblur="valid(this)" name="caseSender" id="caseSender">
+						<input type="text" class="form-control" placeholder="<?php echo $lang['case_sender']; ?>" maxlength="30" onkeyup="valid(this)" onblur="valid(this)" name="caseSender" id="caseSender">
 					</div>
 					<div class="col-md-4" id="department">
 						<label "control-label"><?php echo $lang['department']; ?>:</label>
@@ -269,12 +273,12 @@
 				<p></p>
 				<label "control-label"><?php echo $lang['case_subject']; ?>:</label>
 				<!-- This input box is to write some issue of the contract -->
-				<textarea class="form-control .input-lg" rows="5" onkeyup="valid(this)" onblur="valid(this)" placeholder="<?php echo $lang['case_subject']; ?>" name="caseSubject" id="caseSubject"></textarea>
+				<textarea class="form-control .input-lg" rows="5" maxlength="300" onkeyup="valid(this)" onblur="valid(this)" placeholder="<?php echo $lang['case_subject']; ?>" name="caseSubject" id="caseSubject"></textarea>
 
 				<p></p>
 				<label "control-label"><?php echo $lang['case_comment']; ?>:</label>
 				<!-- This input box is to write some comments of the contract -->
-				<textarea class="form-control .input-lg" rows="5" onkeyup="valid(this)" onblur="valid(this)" placeholder="<?php echo $lang['case_comment']; ?>" name="caseComment" id="caseComment"></textarea>
+				<textarea class="form-control .input-lg" rows="5" maxlength="300" onkeyup="valid(this)" onblur="valid(this)" placeholder="<?php echo $lang['case_comment']; ?>" name="caseComment" id="caseComment"></textarea>
 
 				<br></br>
 				<div class="footer">
@@ -289,6 +293,7 @@
 						<input type="file" class="btn btn-primary pull-right" style="margin-right: 4px" name="file" id="file">
 					</div>
 				</div>
+				<br></br>
 			</form>
 		</div>
 
@@ -299,7 +304,18 @@
 				print "<script>";
 				print "var helpText = document.getElementById('caseNumber_help');";
 				print "helpText.style.color = 'red';";
-				print "helpText.innerHTML = 'Case Number Not Valid';";      
+				print "helpText.innerHTML = 'Case Number Not Valid';";    
+				print "</script>";
+			}
+		?>
+
+		<?php
+			//If a user tries to input a case number already in use this will prompt the user an error.
+			if(isset($_GET['n']) && $_GET['n'] == 'error'){ 
+				print "<script>";
+				print "var helpText = document.getElementById('causal_help');";
+				print "helpText.style.color = 'red';";
+				print "helpText.innerHTML = 'Causal required.';";    
 				print "</script>";
 			}
 		?>
