@@ -1,3 +1,20 @@
+<?php
+	//Includes the libraries to change the language of the page (english/spanish) and the navigational bar
+	include_once 'common.php';
+	include 'library.php';
+	if($_SESSION[job] <> 'admin'){
+		if($_SESSION[job] == 'secretary'){
+			header("Location:secretaryPagehtml.php?p=error");
+		}
+		elseif ($_SESSION[job] == "attorney") {
+			header("Location:attorneyPagehtml.php?p=error");
+		}
+		else{
+			die("You are not allow in this page. :P");
+		}
+	}
+?>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -7,134 +24,141 @@
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="css/ANDINOstyleSheet.css">
 		<meta charset="UTF-8">
+
+		<!-- This is to only permit the characters that we allow to input to the system -->
+		<script type="text/JavaScript">
+			function valid(f) {
+				!(/^[A-z&#209;&#241;0-9; ;.;,;-;@]*$/i).test(f.value)?f.value = f.value.replace(/[^A-z&#209;&#241;0-9; ;.;,;-;@]/ig,''):null;
+			} 
+		</script>
 	</head>
 
-	<!-- This is to only permit the characters that we allow to input to the system -->
-	<script type="text/JavaScript">
-		function valid(f) {
-		!(/^[A-z&#209;&#241;0-9; ;.;,]*$/i).test(f.value)?f.value = f.value.replace(/[^A-z&#209;&#241;0-9; ;.;,]/ig,''):null;
-		} 
-	</script>
-	
 	<body>
-		<!-- Static navbar -->
-		<nav class="navbar navbar-default">
-		  <div class="container-fluid">
-		    <div class="navbar-header">
-		     <!-- This part of the code is for the name of the application -->
-		     <a class="navbar-brand">ANDINO Legal Solution</a>
-		     <!-- Brand and toggle get grouped for better mobile display -->
-		     <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                       <span class="sr-only">Toggle navigation</span>
-                       <span class="icon-bar"></span>
-                       <span class="icon-bar"></span>
-                       <span class="icon-bar"></span>
-                     </button>
-		  	 
-		    </div>
+		<?php 
+			/*
+				This function displays the information in the navigation bar. It includes the system's header, the
+				language selection dropdown and logout buttons.
+			*/
+			navbarEmployeeList($lang['language'],$lang['logout']);
+		?>
 
-		    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-		      <form class="navbar-form navbar-right	" role="logout">
-		      	<!-- This button is to change the language of the page -->
-		      	<button class="btn btn-default">English</button>
-		      	<!-- This button is to logout of the system -->
-		        <a class="btn btn-default" href="Iniciar Sesion.html">Salir</a>
-		      </form>
-		    </div>
-		  </div>
-		</nav>
-		
 		<div class="container">
 			<!-- This is the name in the header of the page -->
-			<h1> Añadir Empleado </h1>
-			
+			<h1><?php print "$lang[eAdd]"; ?></h1>
+
 			<br></br>
-			
-			<form class="form-horizontal" role="form">
+			<form class="form-horizontal" role="form" id="employeeInfo" action="addEmployee.php" method="post">
 				<div class="form-group"> 
-					<label for="employee_name" class="col-sm-2 control-label">Nombre:</label> 
+					<label for="employee_name" class="col-sm-2 control-label"> <?php print $lang['eFirstName']; ?>:</label> 
 					<div class="col-sm-5">
 						<!-- This input text is for the name of the employee -->
-						<input type="text" class="form-control" id="employee_name" placeholder="Primer Nombre del Empleado" onkeyup="valid(this)" onblur="valid(this)"> 
+						<input type="text" class="form-control" id="employeeName" name="employeeName" maxlength="20" placeholder="<?php print $lang['eFirstName']; ?>" onkeyup="valid(this)" onblur="valid(this)" required> 
 					</div>
 				</div> 
 
+				<div class="form-group">  
+					<label for="employee_name" class="col-sm-2 control-label"><?php print $lang['eInitial']; ?>:</label> 
+					<div class="col-sm-5">
+						<!-- This input text is for the name of the employee -->
+						<input type="text" class="form-control" id="employeeInitial" name="employeeInitial" maxlength="2" placeholder="<?php print $lang['eInitial']; ?>" onkeyup="valid(this)" onblur="valid(this)"> 
+					</div>
+				</div>
+
 				<div class="form-group"> 
-					<label for="employee_lastname" class="col-sm-2 control-label">Apellido Paterno:</label> 
+					<label for="employee_lastname" class="col-sm-2 control-label"><?php print $lang['eLastName']; ?>:</label> 
 					<div class="col-sm-5">
 						<!-- This input text is for the fisrt last name of the employee -->
-						<input type="text" class="form-control" id="employee_lastname" placeholder="Primer Apellido del Empleado" onkeyup="valid(this)" onblur="valid(this)"> 
+						<input type="text" class="form-control" id="employeeLastname" name="employeeLastname" maxlength="30" placeholder="<?php print $lang['eLastName']; ?>" onkeyup="valid(this)" onblur="valid(this)" required> 
 					</div> 
 				</div> 
-				
+
 				<div class="form-group"> 
-					<label for="employee_lastname2" class="col-sm-2 control-label">Apellido Materno:</label> 
+					<label for="employee_lastname2" class="col-sm-2 control-label"><?php print $lang['eMaidenName']; ?>:</label> 
 					<div class="col-sm-5">
 						<!-- This input text is for the second last name of the employee -->
-						<input type="text" class="form-control" id="employee_lastname2" placeholder="Segundo Apellido del Empleado" onkeyup="valid(this)" onblur="valid(this)"> 
+						<input type="text" class="form-control" id="employeeLastname2" name="employeeLastname2" maxlength="30" placeholder="<?php print $lang['eMaidenName']; ?>" onkeyup="valid(this)" onblur="valid(this)"> 
 					</div> 
 				</div> 
-				
+
 				<div class="form-group"> 
-					<label for="email_address" class="col-sm-2 control-label">Correo Electrónico:</label>
-					<div class="col-sm-5"> 
-						<!-- This input text is for the email of the employee -->
-						<input type="text" class="form-control" id="email_address" placeholder=" Correo Electrónico " onkeyup="valid(this)" onblur="valid(this)"> 
+					<label for="employee_lastname2" class="col-sm-2 control-label"><?php print $lang['email']; ?>:</label> 
+					<div class="col-sm-5">
+						<!-- This input text is for the second last name of the employee -->
+						<input type="email" class="form-control" id="email" name="email" maxlength="50" placeholder="<?php print $lang['email']; ?>" onkeyup="valid(this)" onblur="valid(this)" oninput="validateEmail(this);" required> 
+						<span  id ='email_help' class=''></span>
 					</div> 
 				</div>
-				
+
 				<div class="form-group"> 
-					<label for="id_number" class="col-sm-2 control-label">Número de Identificación:</label> 
-					<p></p>		
+					<label for="Type_Employee" class="col-sm-2 control-label"><?php print   $lang['eType']; ?>:</label>
+					<div class="col-sm-5" id="TypeEmployee">
+						<!-- This dropdown is for selecting the type of employee -->
+						<?php session_start();
+							$serverName = "127.0.0.1";
+							$connectionInfo = array("Database"=>"PoliceTest", "UID"=>"sa", "PWD"=>"A06a30adr5d");
+							$conn = sqlsrv_connect($serverName, $connectionInfo);
+							/* SQL 
+								$sql = query to fetch information from the emplyee in the database
+								$stmt = sqlsrv_query() = prepares and executes the query
+								$row = sqlsrv_fetch_array() = returns the row as an array
+							*/
+							$sql = "SELECT Title, Job_Role FROM JobTitle WHERE Job_Role <> 'admin'";
+							$stmt = sqlsrv_query($conn, $sql);
+							if ($stmt === false) {
+								die(print_r( sqlsrv_errors(), true));
+							}
+							echo "<select class='form-control' name='TypeEmployee' required>";
+							echo "<option value=''> $lang[eType] </option>";
+							while ($row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC)) {
+								echo "<option value='" . $row['Title'] . "'>" . $row['Title'] . "</option>";
+							}
+							echo "</select>";
+						?>
+					</div>
+				</div>
+
+				<div class="form-group"> 
+					<label for="employee_lastname2" class="col-sm-2 control-label"> <?php print $lang['eTemporaryUser'];?>:</label> 
 					<div class="col-sm-5">
-						<!-- This input text is for the id of the employee -->
-						<input type="text" class="form-control" id="id_number" placeholder="Número de Identificación" onkeyup="valid(this)" onblur="valid(this)"> 
+						<!-- This input text is for the second last name of the employee -->
+						<input type="text" class="form-control" id="Username" name="Username" minlength="8" maxlength="15" placeholder="<?php print $lang['eTemporaryUser'];?>" onkeyup="valid(this)" onblur="valid(this)" oninput="validateUsername(this);" required> 
+						<span  id ='username_help' class=''></span>
 					</div> 
 				</div> 
-				
+
 				<div class="form-group"> 
-					<label for="telephone_num" class="col-sm-2 control-label">Número de Teléfono:</label>
-					<div class="col-sm-5"> 
-						<!-- This input text is for the telephone number of the employee -->
-						<input type="text" class="form-control" id="telephone_num" placeholder=" Número de Teléfono " onkeyup="valid(this)" onblur="valid(this)"> 
-					</div> 
-				</div>
-					
-				<div class="form-group"> 
-					<label for="Type_Employee" class="col-sm-2 control-label">Tipo de Empleado:</label>
+					<label for="employee_lastname2" class="col-sm-2 control-label"><?php print $lang['eTemporaryPass'];?>:</label> 
 					<div class="col-sm-5">
-						<!-- This dropdown is for selectinf the type of employee -->
-					<select class="form-control" id="Type_Employee">
-						<option> Tipo de Empleado </option>
-						<option> Técnicas de Sistemas de Oficina III </option>
-						<option> Administradora del Sistema I </option>
-						<option> Asistente Administrativa </option>
-						<option> Cadete </option>
-						<option> Agente </option>
-						<option> Sargento </option>
-						<option> Teniente </option>
-						<option> Capitan </option>
-						<option> Inspector </option>
-						<option> Comandante </option>
-						<option> Teniente Coronel </option>
-						<option> Coronel </option>
-						<option> Reservista </option>
-					</select>
-				</div>
-			</div>
+						<!-- This input text is for the second last name of the employee -->
+						<input type="text" class="form-control" id="passWord" name="passWord" minlength="8" maxlength="15" placeholder="<?php print $lang['eTemporaryPass'];?>" onkeyup="valid(this)" onblur="valid(this)" required> 
+					</div> 
+				</div> 
 
 				<br></br>
-						
 				<div class="row">
-					<!-- This button is for canceling everithing and returns to the administrators page -->
-					<a class="btn btn-primary pull-right" href="PaginaDeAdministrador.html">Cancelar</a>
 					<!-- This button is for adding a employee to the system -->
-					<a class="btn btn-primary pull-right" style="margin-right: 4px" href="PaginaDeAdministrador.html">Añadir</a>
+					<button class="btn btn-primary col-md-offset-5" type="submit" form="employeeInfo"><?php print $lang['eSubmit'];?></button>
+					<!-- This button is for canceling everithing and returns to the administrators page -->
+					<a class="btn btn-primary"  href="employeeListhtml.php"> <?php print $lang['eCancel'];?></a>
 				</div>
-				
 			</form>
 		</div>
-				
+
+
+		<?php
+			//If a user tries to input a case number already in use this will prompt the user an error.
+			if(isset($_GET['e']) && $_GET['e'] == 'error'){ 
+				print "<script>";
+				print "var helpText = document.getElementById('email_help');";
+				print "helpText.style.color = 'red';";
+				print "helpText.innerHTML = 'Email already exists.';";
+				print "var helpText1 = document.getElementById('username_help');";
+				print "helpText1.style.color = 'red';";
+				print "helpText1.innerHTML = 'Username already exists.';";        
+				print "</script>";
+			}
+		?>
+
 		<script src="js/jquery-1.11.2.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>
 		
