@@ -1,7 +1,5 @@
 <?php
-
   session_start();
-
 
   /* Variables
     $Name = employee name
@@ -19,6 +17,7 @@
   $employeeJob = $_POST['TypeEmployee'];
   $Username = $_POST['Username'];
   $Password = $_POST['passWord'];
+  $email  = $_POST["email"];
 
   /* Server
     $serverName = the name of the server to connect
@@ -39,25 +38,26 @@
   $lastName = mysql_real_escape_string($lastName);
   $maidenName = mysql_real_escape_string($maidenName);
   $employeeJob = mysql_real_escape_string($employeeJob);
+  $email = mysql_real_escape_string($email);
 
- /* SQL
+  /* SQL
     $sql = query that modifies the information of the employee in the database with the variable above
     $stmt = sqlsrv_query() = prepares and executes the query
     $row = sqlsrv_fetch_array() = returns the row as an array
   */
-  $sql = "UPDATE Employee SET Name = '$Name', MiddleName = '$Initial', LastName = '$lastName', MaidenName = '$maidenName', Job = '$employeeJob' WHERE Username = '$_SESSION[username]'";
+  $sql = "UPDATE Employee SET Name = '$Name', MiddleName = '$Initial', LastName = '$lastName', MaidenName = '$maidenName', Job = '$employeeJob', Email = '$email'  WHERE Username = '$_SESSION[username]'";
   $stmt = sqlsrv_query($conn, $sql);
   $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-  
+
   //Verifies if the query is executed successfully
   if ($stmt === false) {
+    header("Location:editEmployeehtml.php?e=error");
     die($sql);
   }
 
   //Redirect to the page employeeListhtml.php
   header("Location:employeeListhtml.php");
-  
+
   //Close the server connection
   sqlsrv_close($conn);
-
 ?>
