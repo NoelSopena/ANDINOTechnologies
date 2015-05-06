@@ -20,7 +20,7 @@
 <html>
 	<head>
 		<!-- This is the name of the page -->
-		<title> Añadir Otras Cosas jaja!!! </title>
+		<title> Añadir Otras Cosas </title>
 		<link rel="stylesheet" href="css/bootstrap.min.css">
 		<link rel="stylesheet" href="css/bootstrap-theme.min.css">
 		<link rel="stylesheet" href="css/ANDINOstyleSheet.css">
@@ -62,6 +62,16 @@
 					</fieldset>
 				</div>
 				<button class="btn btn-primary col-md-offset-5" type="submit" form="settings"><?php print $lang['eSubmit'];?></button>
+			</form>
+			<br></br>
+			<form class="form-horizontal" role="form" id="settings2" action="settings.php" method="post">
+				<div class="form-group">
+					<fieldset class="col-md-5">
+						<legend>Document Type</legend>
+						<input type="text" class="form-control" id="docType" name="docType" placeholder="Document's Title" onkeyup="valid(this)" onblur="valid(this)" required>
+					</fieldset>
+				</div>
+				<button class="btn btn-primary col-md-offset-5" type="submit" form="settings2"><?php print $lang['eSubmit'];?></button>
 			</form>
 			<br></br>
 			<form class="form-horizontal" role="form" id="settings2" action="settings.php" method="post">
