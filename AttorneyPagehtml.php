@@ -141,7 +141,7 @@
 														WHERE DocStatus <> 'Concluido' ORDER BY Deadline ASC";
 									}
 									elseif($selectDoc == 'contract'){
-										$sql = "SELECT ContractNumber AS DocNumber, ServiceCategory AS DocType, CONVERT(VARCHAR(11),EffectiveUntil,106) AS fecha, Estado AS DocStatus FROM Contracts ORDER BY fecha ASC";
+										$sql = "SELECT ContractNumber AS DocNumber, Categoria AS DocType, CONVERT(VARCHAR(11),EffectiveUntil,106) AS fecha, Estado AS DocStatus FROM Contracts, Categoria WHERE ServiceCategory = Codigo ORDER BY fecha ASC";
 									}
 									else {
 										$sql = "SELECT DocNumber, DocType, CONVERT(VARCHAR(11),Deadline,106) AS fecha, DocStatus FROM Documents
