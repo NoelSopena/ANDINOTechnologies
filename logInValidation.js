@@ -1,4 +1,5 @@
 
+
 function validateFormName(x,z,w,v) {
 			var minLength = 8; //Minimum characters
 			var maxLength = 15; //Maximum characters
@@ -118,6 +119,16 @@ function validateNewPassword(x) {
                 if(helpText != null){
                     helpText.style.color = "red";
                     helpText.innerHTML = "Password already exists.";
+                }
+                return false;
+            }
+
+function validateCausal(x) {
+            var helpText = document.getElementById('causal_help');
+            var x = x.value;
+                if(helpText != null){
+                    helpText.style.color = "red";
+                    helpText.innerHTML = "Causal required.";
                 }
                 return false;
             }
