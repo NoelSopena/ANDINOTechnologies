@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 	//Creates a session passed via a POST request
 	session_start();
 
