@@ -1,9 +1,13 @@
 body {
-
     background-color: #EFFEDE ;
 }
 
 .navbar-default {
+  position: fixed;
+  z-index: 23;
+  top: 0px;
+  left: 0px;
+  width: 100%;
   border-color:  #0000FF;
   border-bottom-width:2px;
 }
@@ -13,11 +17,18 @@ body {
   font-size: 170%;
 }
 
+label{
+    color: black;
+    font-size: 15px;
+}
+
 h1 {
+    padding-top: 80px;
     color: black;
     text-align: left;
 }
-table {
+
+table {  
     width: 100%; 
     text-align: left;
     border: 2px solid black;
@@ -25,17 +36,17 @@ table {
 }
 
 td {
-    padding-left: 10px;
+    height: 50px;
     border: 2px solid black;
-    height: 30px;
-    font-size: 18px;
+ 
 }
 
 .invalid-blink {
     background-color: red;
+    color: white;
 }
 
-th { 
+th {
   height: 50px;
   border: 2px solid black;
   text-align: center;
@@ -45,23 +56,63 @@ p {
     font-family: "Arial";
     text-align: center;
     color: black;
+    font-size: 18px;
     
 }
 
-a{
+h2 {
+  font-family: "Arial";
+    text-align: left;
+    color: black;
+    font-size: 25px
+}
+
+a {
 	font-family: "Arial";
 	color: black;
 }
 
-@media print{ 
-  no.print, .footer{
+@media print { 
+  no.print, .footer, p, br {
   display: none;
   }
+
+  no.print, ::-webkit-scrollbar {
+    display: block; 
+  }
+
+  .print, h1 {
+    font-size: 25px;
+    padding-top: 0;
+    text-align: left;
+  }
+
+  .print, h2 {
+    font-size: 25px;
+    text-align: left;
+  }
+  .print, td {
+    width: 2000px;
+    border-style: hidden;
+    font-size: 23px;
+    text-align: left;
+  }
+
+  .print, th {
+    width: 2000px;
+    border-style: hidden;
+    font-size: 23px;
+    text-align: left;
+  }
+
+  .print, label {
+    font-size: 13px;
+  }
+
 }
 
 #table-scroll {
   height:450px;
   overflow:auto;  
-  margin-top:20px;
+  margin-top:0px;
 }
-
