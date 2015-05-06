@@ -339,6 +339,7 @@
 								
 							}
 						?>
+						
 				<div class="row">
 						<!-- This button is for canceling everithing and returns to the lawyer page -->
 						<a class="btn btn-primary pull-right" style="margin-right: 4px" href="attorneyPagehtml.php"><?php echo $lang['eCancel']; ?></a>
