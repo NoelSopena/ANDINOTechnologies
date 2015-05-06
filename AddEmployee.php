@@ -6,11 +6,11 @@
   function mysql_escape_mimic($inp) {
     if(is_array($inp))
       return array_map(__METHOD__, $inp);
-      if(!empty($inp) && is_string($inp)) {
-        return str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $inp);
-      }
+    if(!empty($inp) && is_string($inp)) {
+      return str_replace(array('\\', "\0", "\n", "\r", "'", '"', "\x1a"), array('\\\\', '\\0', '\\n', '\\r', "\\'", '\\"', '\\Z'), $inp);
+    }
     return $inp;
-  } 
+  }
 
   /* Variables
     $Name = employee name
@@ -25,6 +25,7 @@
   $Initial = $_POST['employeeInitial'];
   $lastName = $_POST['employeeLastname'];
   $maidenName = $_POST['employeeLastname2'];
+  $email = $_POST['email'];
   $employeeJob = $_POST['TypeEmployee'];
   $Username = $_POST['Username'];
   $Password = $_POST['passWord'];
@@ -43,7 +44,6 @@
     die(print_r( sqlsrv_errors(), true));
   }
 
-
   //The function mysql_real_escape_string will clear the special characters from the variable.
   $Username = mysql_real_escape_string($Username);
   $Password = mysql_real_escape_string($Password);
@@ -52,19 +52,21 @@
   $lastName = mysql_real_escape_string($lastName);
   $maidenName = mysql_real_escape_string($maidenName);
   $employeeJob = mysql_real_escape_string($employeeJob);
+  $email = mysql_real_escape_string($email);
 
   $cryptPassword = md5($Password);
- /* SQL
+  /* SQL
     $sql = query to insert the information of the employee in the database with the variable above
     $stmt = sqlsrv_query() = prepares and executes the query
     $row = sqlsrv_fetch_array() = returns the row as an array
   */
-  $sql = "INSERT INTO Employee VALUES('$Username', '$cryptPassword', '$Name', '$Initial', '$lastName', '$maidenName', 'Hato Rey', '$employeeJob')";
+  $sql = "INSERT INTO Employee VALUES('$Username', '$cryptPassword', '$Name', '$Initial', '$lastName', '$maidenName', '$_SESSION[office]', '$employeeJob', '$email')";
   $stmt = sqlsrv_query($conn, $sql);
   $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
   //Verifies if the query is executed successfully
   if ($stmt === false) {
+    header("Location:addEmployeehtml.php?e=error");
     die($sql);
   }
 
