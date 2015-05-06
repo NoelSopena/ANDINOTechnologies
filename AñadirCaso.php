@@ -45,7 +45,6 @@
   $documentType = $_POST['documentType'];
   $department = $_POST['department'];
   $documentSubcategory = $_POST['documentSubcategory'];
-  $caseCopy = $_POST['caseCopy'];
   $quantity = $_POST['quantity'];
 
   // The function mysql_real_escape_string will clear the special characters from the variable.
@@ -59,30 +58,100 @@
   $documentType = mysql_real_escape_string($documentType);
   $documentSubcategory = mysql_real_escape_string($documentSubcategory);
   $caseSubject = mysql_real_escape_string($caseSubject);
-  $caseCopy = mysql_real_escape_string($caseCopy);
   $quantity = mysql_real_escape_string($quantity);
+  $causales = explode(", ", $documentSubcategory);
 
-  //hard cody
-  $tar_dir = "copies\\$caseCopy";
+  if(isset($_FILES['file'])) {
+    $file = $_FILES['file'];
+
+    // File properties
+    $file_name = $file['name'];
+    $file_tmp = $file['tmp_name'];
+    $file_size = $file['size'];
+    $file_error = $file['error'];
+
+    // Work out the file extension
+    $file_ext = explode('.', $file_name);
+    $file_ext = strtolower(end($file_ext));
+
+    $allowed = array('txt', 'pdf');
+
+    if(in_array($file_ext, $allowed)) {
+      if($file_error === 0) {
+        if($file_size <= 5000000) {
+          $file_name_new = uniqid('', true) . '.' . $file_ext;
+          $file_destination = 'copies\\' . $file_name_new;
+
+          if(move_uploaded_file($file_tmp, $file_destination)) {
+            $Copy = $file_destination.'-';
+
+            $key = 'diego';
+            //$plain_text = 'very important data';
+
+            /* Open module, and create IV */
+            $td = mcrypt_module_open('rijndael-256', '', 'ecb', '');
+            $key = substr($key, 0, mcrypt_enc_get_key_size($td));
+            $iv_size = mcrypt_enc_get_iv_size($td);
+            $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
+            /* Initialize encryption handle */
+            if (mcrypt_generic_init($td, $key, $iv) != -1) {
+              /* Encrypt data */
+              $caseCopy = mcrypt_generic($td, $Copy);
+              mcrypt_generic_deinit($td);
+
+              /* Clean up */
+              mcrypt_generic_deinit($td);
+              mcrypt_module_close($td);
+            }
+            /* SQL
+                $sql = query to update the information of the case in the database with the variables above
+                $stmt = sqlsrv_query() = prepares and executes the query
+                $row = sqlsrv_fetch_array() = returns the row as an array
+              */
+              $sql3 = "INSERT INTO Copy VALUES( '$_SESSION[docID]', GETDATE(), '$caseCopy')";
+              $stmt3 = sqlsrv_query($conn, $sql3);
+              $row3 = sqlsrv_fetch_array($stmt3, SQLSRV_FETCH_ASSOC);
+
+              if ($stmt3 === false) {
+                echo "tercer if";
+                echo $sql3;
+                die(print_r( sqlsrv_errors(), true));
+              }
+          }
+          else {
+                $caseCopy = "copies\\";
+              }
+          }
+      }
+    }
+    
+  }
+  
 
   /* SQL
-    $sql = query to insert the information of the employee in the database with the variable above
+    $sql = query to insert the information of the document in the database with the variable above
     $stmt = sqlsrv_query() = prepares and executes the query
     $row = sqlsrv_fetch_array() = returns the row as an array
   */
-  $sql = "INSERT INTO Documents VALUES('$caseNumber','$dateReceived', '$dateDocument', '$dateDue', '$caseAppellant', '$caseSender', '$department', '$documentType', '$documentSubcategory', '$caseSubject', '$tar_dir', 'No')";
+    //die($caseCopy);
+  $sql = "INSERT INTO Documents VALUES('$caseNumber', '$dateReceived', CASE WHEN '$dateDocument' = '' THEN NULL ELSE '$dateDocument' END,
+          CASE WHEN '$dateDue' = '' THEN DATEADD(day,30,GETDATE()) ELSE '$dateDue' END, '$caseAppellant', '$caseSender', '$department', '$documentType',
+          '$caseSubject', DEFAULT)";
   $stmt = sqlsrv_query($conn, $sql);
   $row = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
 
   //Verify if the query executed successfully
   if ($stmt === false) {
     echo "primer if";
-    //echo $sql;
-    die(print_r( sqlsrv_errors(), true));
+   
+    echo $sql;
+   die(print_r( sqlsrv_errors(), true));
+    header("Location:anadirCasohtml.php?e=error");
   }
 
   /* SQL
-    $sql3 = query to insert the information of the employee in the database with the variable above
+    $sql3 = query to insert the document number added to the system and the username from the employee who added the document
     $stmt3 = sqlsrv_query() = prepares and executes the query
     $row3 = sqlsrv_fetch_array() = returns the row as an array
     The function mysql_real_escape_string will clear the special characters from the variable.
@@ -91,7 +160,7 @@
   $sql3 = "INSERT INTO AddDoc VALUES('$caseNumber', '$_SESSION[username]')";
   $stmt3 = sqlsrv_query($conn, $sql3);
   $row3 = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
-  
+
   //to verify if the query executed successful
   if ($stmt3 === false) {
     echo "tercer if";
@@ -100,7 +169,7 @@
   }
 
   /* SQL
-    $sql5 = query to insert the information of the employee in the database with the variable above
+    $sql5 = query to insert the document number added to the system and the username from the employee who will be in charge of the document
     $stmt5 = sqlsrv_query() = prepares and executes the query
     $row5 = sqlsrv_fetch_array() = returns the row as an array
     The function mysql_real_escape_string will clear the special characters from the variable.
@@ -109,7 +178,7 @@
   $caseReceiver = mysql_real_escape_string($caseReceiver);
   $sql5 = "INSERT INTO Manage VALUES('$caseNumber', '$caseReceiver')";
   $stmt5 = sqlsrv_query($conn, $sql5);
-  $row5 = sqlsrv_fetch_array($stmt, SQLSRV_FETCH_ASSOC);
+  $row5 = sqlsrv_fetch_array($stmt5, SQLSRV_FETCH_ASSOC);
 
   //Verify if the query executed successfully
   if ($stmt5 === false) {
@@ -119,29 +188,48 @@
   }
 
   //if the document is a lawsuit execute the query inside the if
-  if($documentType == 'Lawsuit'){
+  if($documentType == 'Demanda'){
     /* SQL
-      $sql2 = query to insert the information of the employee in the database with the variable above
+      $sql2 = query to insert the document number and the monetary amount of the lawsuit
       $stmt2 = sqlsrv_query() = prepares and executes the query
       $row2 = sqlsrv_fetch_array() = returns the row as an array
       The function mysql_real_escape_string will clear the special characters from the variable.
     */
     $caseNumber = mysql_real_escape_string($caseNumber);
-    $sql2 = "INSERT INTO Lawsuit VALUES ('$caseNumber', '$quantity')";
-    $stmt2 = sqlsrv_query($conn, $sql2);
-    $row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC);
+    foreach ($causales as $key) {
+      if ($key <> '') {
+        $sql2 = "INSERT INTO Lawsuit VALUES ('$caseNumber', '$key', '$quantity')";
+        $stmt2 = sqlsrv_query($conn, $sql2);
+        $row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC);
 
-    //Verify if the query executed successfully
-    if ($stmt2 === false) {
-      echo "seugndo if";
-      die(print_r( sqlsrv_errors(), true));
+        //Verify if the query executed successfully
+        if ($stmt2 === false) {
+          echo "seugndo if";
+          die(print_r( sqlsrv_errors(), true));
+        }
+      }
+    }
+  }
+  else{
+    foreach ($causales as $key) {
+      if ($key <> '') {
+        $sql2 = "INSERT INTO Others VALUES ('$caseNumber', '$key', '$documentType')";
+        $stmt2 = sqlsrv_query($conn, $sql2);
+        $row2 = sqlsrv_fetch_array($stmt2, SQLSRV_FETCH_ASSOC);
+
+        //Verify if the query executed successfully
+        if ($stmt2 === false) {
+          echo "seugndo if";
+          die(print_r( sqlsrv_errors(), true));
+        }
+      }
     }
   }
 
   //if there are some comment of the document execute the query inside the if
   if ($caseComment <> "") {
     /* SQL
-      $sql4 = query to insert the information of the employee in the database with the variable above
+      $sql4 = query to insert the comments to the document from the employee who add the comment and the date when is added
       $stmt4 = sqlsrv_query() = prepares and executes the query
       $row4 = sqlsrv_fetch_array() = returns the row as an array
       The function mysql_real_escape_string will clear the special characters from the variable.
@@ -160,7 +248,7 @@
   }
 
   //redirect to the page secretaryPagehtml.php
-  header("Location:secretaryPage.php");
+  header("Location:secretaryPagehtml.php");
 
   //close the server connection
   sqlsrv_close($conn);
